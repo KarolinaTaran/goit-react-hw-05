@@ -1,0 +1,17 @@
+.heading {
+  margin-left: 40px;
+}
+
+.movieList {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.movieList img {
+  transition: transform 0.3s ease;
+}
+
+.movieList img:hover {
+  transform: scale(1.2);
+}
