@@ -2,30 +2,52 @@ import { useEffect, useRef, useState } from "react";
 import MovieCast from "../components/movieCast/MovieCast";
 import MovieReviews from "../components/movieReviews/MovieReviews";
 import { Link, useLocation, useParams } from "react-router-dom";
-import axios from "axios";
 import Loader from "../components/loader/Loader";
+import {
+  getMovieCredits,
+  getMovieDetails,
+  getMovieReviews,
+} from "../services/api";
 
 const MovieDetailsPage = () => {
   const posterDefault = (
     <img src={`/img/posterDefault.jpg`} width={600} height={400} alt="poster" />
   );
+
+  const [reviews, setReviews] = useState([]);
+  const [cast, setCast] = useState([]);
   const [currentMovie, setCurrentMovie] = useState(null);
   const { movieId } = useParams();
   const [showCast, setShowCast] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const location = useLocation();
-  const backLinkHref = useRef(location.state ?? "/movies/search");
+  const backHref = useRef(location.state || "/movies/search");
 
   useEffect(() => {
-    const ACCESS_KEY = "c386a5d859151328539f0be53cca08b2";
-    const url = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${ACCESS_KEY}`;
-    axios
-      .get(url)
-      .then((response) => {
-        const movieData = response.data;
+    (async () => {
+      if (movieId !== undefined) {
+        const movieData = await getMovieDetails(movieId);
         setCurrentMovie(movieData);
-      })
-      .catch((err) => console.error(err));
+      }
+    })();
+  }, [movieId]);
+
+  useEffect(() => {
+    (async () => {
+      if (movieId !== undefined) {
+        const castData = await getMovieCredits(movieId);
+        setCast(castData);
+      }
+    })();
+  }, [movieId]);
+
+  useEffect(() => {
+    (async () => {
+      if (movieId !== undefined) {
+        const reviewsData = await getMovieReviews(movieId);
+        setReviews(reviewsData);
+      }
+    })();
   }, [movieId]);
 
   if (!currentMovie) return <Loader />;
@@ -43,7 +65,7 @@ const MovieDetailsPage = () => {
   return (
     <div>
       <Link
-        to={backLinkHref}
+        to={backHref.current}
         style={{
           display: "flex",
           marginLeft: "40px",
@@ -82,7 +104,8 @@ const MovieDetailsPage = () => {
           {showCast && (
             <MovieCast
               style={{ cursor: "pointer" }}
-              movieId={currentMovie.id}
+              movieId={movieId}
+              cast={cast}
             />
           )}
         </Link>
@@ -91,7 +114,9 @@ const MovieDetailsPage = () => {
           <h3 onClick={toggleReviews} style={{ cursor: "pointer" }}>
             Reviews
           </h3>
-          {showReviews && <MovieReviews movieId={currentMovie.id} />}
+          {showReviews && (
+            <MovieReviews movieId={currentMovie.id} reviews={reviews} />
+          )}
         </Link>
       </div>
     </div>

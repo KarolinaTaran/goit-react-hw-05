@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import SearchBar from "../components/searchBar/SearchBar";
-import axios from "axios";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import SearchResultsList from "../components/searchResultsList/SearchResultsList";
+import { getSearchingMovie } from "../services/api";
 
 const MoviesPage = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { query } = searchParams;
 
@@ -21,18 +22,23 @@ const MoviesPage = () => {
     }
   }, [query]);
 
-  const handleSearch = (query) => {
-    const ACCESS_KEY = "c386a5d859151328539f0be53cca08b2";
-    const url = `https://api.themoviedb.org/3/search/movie?api_key=${ACCESS_KEY}&query=${query}&include_adult=false&language=en-US&page=1`;
+  useEffect(() => {
+    (async () => {
+      if (query !== undefined) {
+        const searchResults = await getSearchingMovie(query);
+        setSearchResults(searchResults);
+      }
+    })();
+  }, [searchQuery]);
 
-    axios
-      .get(url)
-      .then((response) => {
-        const searchData = response.data.results;
-        setSearchResults(searchData);
-        navigate(`/movies?query=${query}`);
-      })
-      .catch((err) => console.error(err));
+  const handleSearch = async (query) => {
+    try {
+      const searchData = await getSearchingMovie(query);
+      setSearchResults(searchData);
+      navigate(`/movies?query=${query}`);
+    } catch (error) {
+      console.error("Error searching movies:", error);
+    }
   };
 
   return (
@@ -43,7 +49,7 @@ const MoviesPage = () => {
           : "Discover Movies"}
       </h2>
       <SearchBar onSearch={handleSearch} />
-      <SearchResultsList searchResults={searchResults} />
+      <SearchResultsList searchResults={searchResults} state={location.state} />
     </div>
   );
 };
