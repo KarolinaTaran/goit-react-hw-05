@@ -2,7 +2,7 @@ import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import Loader from "./components/loader/Loader";
 import * as styles from "./App.modules.css";
-import SearchResultsList from "./components/searchResultsList/SearchResultsList";
+// import SearchResultsList from "./components/searchResultsList/SearchResultsList";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const MoviesPage = lazy(() => import("./pages/MoviesPage"));
@@ -35,11 +35,11 @@ function App() {
             element={<MoviesPage />}
             className={getNavLinkClassNames}
           />
-          <Route
+          {/* <Route
             path="/movies/search"
             element={<SearchResultsList />}
             className={getNavLinkClassNames}
-          />
+          /> */}
           <Route
             path="/movies/:movieId"
             element={<MovieDetailsPage />}

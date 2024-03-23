@@ -22,6 +22,7 @@ const HomePage = () => {
 
   return (
     <div>
+      <h2>Trending Today</h2>
       {Array.isArray(movies) && movies !== undefined && (
         <MovieList movies={movies} page={page} />
       )}

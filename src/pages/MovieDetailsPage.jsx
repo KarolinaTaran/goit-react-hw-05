@@ -21,7 +21,7 @@ const MovieDetailsPage = () => {
   const [showCast, setShowCast] = useState(false);
   const [showReviews, setShowReviews] = useState(false);
   const location = useLocation();
-  const backHref = useRef(location.state || "/movies/search");
+  const backHref = useRef(location.state || "/movies");
 
   useEffect(() => {
     (async () => {
