@@ -1,13 +1,11 @@
 import css from "./MovieList.module.css";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const MovieList = ({ movies }) => {
   const posterDefault = (
     <img src={`/img/posterDefault.jpg`} width={200} height={300} alt="poster" />
   );
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get("query");
 
   return (
     <div>

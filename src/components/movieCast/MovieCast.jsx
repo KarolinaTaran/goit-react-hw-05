@@ -7,7 +7,7 @@ const MovieCast = ({ cast }) => {
 
   return (
     <div className={css.castWrapper}>
-      {cast !== undefined &&
+      {cast !== undefined && cast.length > 0 ? (
         cast.map((actor) => (
           <ul key={actor.id}>
             <li className={css.castList}>{actor.name}</li>
@@ -24,7 +24,10 @@ const MovieCast = ({ cast }) => {
               )}
             </li>
           </ul>
-        ))}
+        ))
+      ) : (
+        <p>Sorry, there is no cast to show</p>
+      )}
     </div>
   );
 };
