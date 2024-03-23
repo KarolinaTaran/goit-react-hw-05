@@ -15,3 +15,8 @@
 .movieList img:hover {
   transform: scale(1.2);
 }
+
+.item {
+  width: 300px;
+  height: 500px;
+}

@@ -1,20 +1,39 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import css from "./MovieReviews.module.css";
+
 const MovieReviews = () => {
+  const [reviews, setReviews] = useState([]);
+  const { movieId } = useParams();
+
+  useEffect(() => {
+    const ACCESS_KEY = "c386a5d859151328539f0be53cca08b2";
+    const url = `https://api.themoviedb.org/3/movie/${movieId}/reviews?api_key=${ACCESS_KEY}`;
+
+    axios
+      .get(url)
+      .then((response) => {
+        const reviewsData = response.data.results;
+        setReviews(reviewsData);
+      })
+      .catch((err) => console.error(err));
+  }, [movieId]);
+
   return (
     <div>
-      <h2>This is th movieReviews</h2>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi iure
-        nihil et unde in tempora hic eaque, magnam, minus dolores numquam
-        nostrum, qui voluptas. Voluptates, modi. Nihil soluta doloribus
-        molestias accusantium culpa asperiores modi corrupti quaerat perferendis
-        sapiente incidunt natus amet error voluptatem, officia odit quam iure id
-        corporis? Perferendis placeat quasi illum ipsam tempora nobis mollitia.
-        Cupiditate architecto quis, quasi est repellendus quaerat incidunt, rem
-        nulla veritatis, nihil exercitationem officiis praesentium sint cum
-        error tempore corrupti? Itaque nemo facere cupiditate magnam cumque
-        libero rerum eaque optio nesciunt, ab minus voluptates dolor cum.
-        Distinctio cum rerum nostrum accusamus dolores molestias.
-      </p>
+      {reviews.length > 0 ? (
+        <ul className={css.reviewsList}>
+          {reviews.map((review, index) => (
+            <li className={css.item} key={index}>
+              <p className={css.nameAuthor}>Author: {review.author}</p>
+              <p className={css.text}>{review.content}</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        "Sorry, there are no any reviews."
+      )}
     </div>
   );
 };

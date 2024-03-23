@@ -1,0 +1,21 @@
+.form {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+
+.input {
+    width: 440px;
+    height: 35px;
+    border-radius: 8px;
+    background-color: rgb(245, 232, 221);
+
+}
+
+.input::placeholder {
+    color: black;
+}
+
+.input:focus {
+    background-color: rgb(238, 211, 217);
+}

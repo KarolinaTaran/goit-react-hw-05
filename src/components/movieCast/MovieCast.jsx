@@ -6,7 +6,9 @@ import css from "./MovieCast.module.css";
 const MovieCast = () => {
   const [cast, setCast] = useState([]);
   const { movieId } = useParams();
-  const imgDefault = <img src={`../img/defaultImg.png`} />;
+  const imgDefault = (
+    <img src={`/img/picDefault.png`} width={100} height={150} alt="poster" />
+  );
 
   useEffect(() => {
     const ACCESS_KEY = "c386a5d859151328539f0be53cca08b2";
@@ -26,7 +28,7 @@ const MovieCast = () => {
       {cast.map((actor) => (
         <ul key={actor.id}>
           <li className={css.castList}>{actor.name}</li>
-          <li className={css.castList}>{actor.character}</li>
+          <li className={css.castList}>Character: {actor.character}</li>
           <li className={css.castList}>
             {actor.profile_path ? (
               <img
