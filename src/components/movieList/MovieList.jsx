@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import css from "./MovieList.module.css";
 import { Link } from "react-router-dom";
 
-const MovieList = ({ page }) => {
+const MovieList = ({ page, query }) => {
   const [movies, setMovies] = useState([]);
 
   useEffect(() => {
@@ -30,7 +30,10 @@ const MovieList = ({ page }) => {
           <li className={css.item} key={`${movie.id}_${index}`}>
             <h3>{movie.title}</h3>
             <p>Popularity: {movie.popularity.toFixed(1)}</p>
-            <Link to={`/movies/${movie.id}`}>
+            <Link
+              to={`/movies/${movie.id}`}
+              state={{ from: `/movies?query=${query}` }}
+            >
               <img
                 src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                 alt={movie.title}

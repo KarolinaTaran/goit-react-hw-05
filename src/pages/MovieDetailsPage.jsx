@@ -3,6 +3,7 @@ import MovieCast from "../components/movieCast/MovieCast";
 import MovieReviews from "../components/movieReviews/MovieReviews";
 import { Link, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
+import Loader from "../components/loader/Loader";
 
 const MovieDetailsPage = () => {
   const posterDefault = (
@@ -14,16 +15,6 @@ const MovieDetailsPage = () => {
   const [showReviews, setShowReviews] = useState(false);
   const location = useLocation();
   const backLinkHref = useRef(location.state ?? "/movies/search");
-
-  // useEffect(() => {
-  //   console.log(location.search);
-  //   if (!backLinkRef.current) {
-  //     backLinkRef.current = {
-  //       pathname: "/movies/search",
-  //       search: "",
-  //     };
-  //   }
-  // }, [location]);
 
   useEffect(() => {
     const ACCESS_KEY = "c386a5d859151328539f0be53cca08b2";
@@ -37,7 +28,7 @@ const MovieDetailsPage = () => {
       .catch((err) => console.error(err));
   }, [movieId]);
 
-  if (!currentMovie) return <div>Loading...</div>;
+  if (!currentMovie) return <Loader />;
 
   const toggleCast = () => {
     setShowCast(!showCast);

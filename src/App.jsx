@@ -49,7 +49,7 @@ function App() {
             <Route path="/movies/:movieId/reviews" element={<MovieReviews />} />
           </Route>
 
-          <Route path="*" element={<NotFoundPage to="/" replace />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </>
