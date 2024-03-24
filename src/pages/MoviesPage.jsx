@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/searchBar/SearchBar";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { getSearchingMovie } from "../services/api";
@@ -9,21 +9,25 @@ const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchParams] = useSearchParams();
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("query"));
+  const [searchQuery, setSearchQuery] = useState(searchParams);
   const navigate = useNavigate();
   const location = useLocation();
-  const lastQuery = useRef("");
 
   const { query, page } = searchParams;
 
-  useEffect(() => {
-    if (query) {
-      setSearchQuery(query);
-      setCurrentPage(parseInt(page) || 1);
-    } else {
-      setMovies([]);
-    }
-  }, [query, page]);
+  useEffect(
+    (page) => {
+      const inputSearch = searchParams.get("query");
+      if (inputSearch) {
+        handleSearch(inputSearch, 1);
+        setSearchQuery(inputSearch);
+        setCurrentPage(parseInt(page) || 1);
+      } else {
+        setMovies([]);
+      }
+    },
+    [query, page]
+  );
 
   const handleSearch = async (query, page) => {
     try {
@@ -33,7 +37,6 @@ const MoviesPage = () => {
       navigate(`/movies?query=${query}&page=${nextPage}`, {
         state: location.state,
       });
-      lastQuery.current = query;
       setCurrentPage(nextPage + 1);
     } catch (error) {
       console.error("Error searching movies:", error);
@@ -42,12 +45,11 @@ const MoviesPage = () => {
 
   const loadMore = async () => {
     try {
-      const newData = await getSearchingMovie(
-        lastQuery.current,
-        currentPage + 1
-      );
+      const query = searchParams.get("query");
+      let nextPage = parseInt(currentPage) || 1;
+      const newData = await getSearchingMovie(query, nextPage);
       setMovies((prevResults) => [...prevResults, ...newData]);
-      setCurrentPage((prevPage) => prevPage + 1);
+      setCurrentPage((nextPage) => nextPage + 1);
     } catch (error) {
       console.error("Error loading more movies:", error);
     }
@@ -56,8 +58,8 @@ const MoviesPage = () => {
   return (
     <div>
       <h2>
-        {searchQuery
-          ? `Search results for "${searchQuery}"`
+        {searchQuery && searchQuery.length > 0
+          ? `Search results for ${searchQuery}`
           : "Discover Movies"}
       </h2>
       <SearchBar onSearch={handleSearch} />
