@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
 import Loader from "./components/loader/Loader";
 import * as styles from "./App.modules.css";
+import Navigation from "./components/navigation/Navigation";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
 const MoviesPage = lazy(() => import("./pages/MoviesPage"));
@@ -11,7 +12,6 @@ const MovieCast = lazy(() => import("./components/movieCast/MovieCast"));
 const MovieReviews = lazy(() =>
   import("./components/movieReviews/MovieReviews")
 );
-const Navigation = lazy(() => import("./components/navigation/Navigation"));
 
 const getNavLinkClassNames = ({ isActive }) =>
   clsx({
@@ -34,13 +34,9 @@ function App() {
             element={<MoviesPage />}
             className={getNavLinkClassNames}
           />
-          <Route
-            path="/movies/:movieId"
-            element={<MovieDetailsPage />}
-            className={getNavLinkClassNames}
-          >
-            <Route path="/movies/:movieId/cast" element={<MovieCast />} />
-            <Route path="/movies/:movieId/reviews" element={<MovieReviews />} />
+          <Route path="/movies/:movieId" element={<MovieDetailsPage />}>
+            <Route path="cast" element={<MovieCast />} />
+            <Route path="reviews" element={<MovieReviews />} />
           </Route>
 
           <Route path="*" element={<NotFoundPage />} />

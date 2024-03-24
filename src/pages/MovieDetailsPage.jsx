@@ -1,21 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import MovieCast from "../components/movieCast/MovieCast";
 import MovieReviews from "../components/movieReviews/MovieReviews";
-import { Link, useLocation, useParams } from "react-router-dom";
-import Loader from "../components/loader/Loader";
 import {
-  getMovieCredits,
-  getMovieDetails,
-  getMovieReviews,
-} from "../services/api";
+  Link,
+  NavLink,
+  Outlet,
+  useLocation,
+  useParams,
+} from "react-router-dom";
+import Loader from "../components/loader/Loader";
+import { getMovieDetails } from "../services/api";
 
 const MovieDetailsPage = () => {
   const posterDefault = (
     <img src={`/img/posterDefault.jpg`} width={600} height={400} alt="poster" />
   );
 
-  const [reviews, setReviews] = useState([]);
-  const [cast, setCast] = useState([]);
   const [currentMovie, setCurrentMovie] = useState(null);
   const { movieId } = useParams();
   const [showCast, setShowCast] = useState(false);
@@ -30,25 +30,7 @@ const MovieDetailsPage = () => {
         setCurrentMovie(movieData);
       }
     })();
-  }, [movieId]);
-
-  useEffect(() => {
-    (async () => {
-      if (movieId !== undefined) {
-        const castData = await getMovieCredits(movieId);
-        setCast(castData);
-      }
-    })();
-  }, [movieId]);
-
-  useEffect(() => {
-    (async () => {
-      if (movieId !== undefined) {
-        const reviewsData = await getMovieReviews(movieId);
-        setReviews(reviewsData);
-      }
-    })();
-  }, [movieId]);
+  }, []);
 
   if (!currentMovie) return <Loader />;
 
@@ -97,28 +79,17 @@ const MovieDetailsPage = () => {
         <p>Overview: {currentMovie.overview}</p>
       </div>
       <div>
-        <Link to={`/movies/${currentMovie.id}/cast`}>
-          <h3 onClick={toggleCast} style={{ cursor: "pointer" }}>
-            Cast
-          </h3>
-          {showCast && (
-            <MovieCast
-              style={{ cursor: "pointer" }}
-              movieId={movieId}
-              cast={cast}
-            />
-          )}
-        </Link>
+        <NavLink onClick={toggleCast}>
+          <h3 style={{ cursor: "pointer" }}>Cast</h3>
+          {showCast && <MovieCast style={{ cursor: "pointer" }} />}
+        </NavLink>
 
-        <Link to={`/movies/${currentMovie.id}/reviews`}>
-          <h3 onClick={toggleReviews} style={{ cursor: "pointer" }}>
-            Reviews
-          </h3>
-          {showReviews && (
-            <MovieReviews movieId={currentMovie.id} reviews={reviews} />
-          )}
-        </Link>
+        <NavLink onClick={toggleReviews}>
+          <h3 style={{ cursor: "pointer" }}>Reviews</h3>
+          {showReviews && <MovieReviews movieId={currentMovie.id} />}
+        </NavLink>
       </div>
+      <Outlet />
     </div>
   );
 };
