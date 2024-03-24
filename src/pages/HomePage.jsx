@@ -10,8 +10,8 @@ const HomePage = () => {
   useEffect(() => {
     (async () => {
       if (page !== undefined) {
-        const movies = await getTrendingMovies(page);
-        setMovies((prevMovies) => [...prevMovies, ...movies]);
+        const trendingMovies = await getTrendingMovies(page);
+        setMovies((prevMovies) => [...prevMovies, ...trendingMovies]);
       }
     })();
   }, [page]);
