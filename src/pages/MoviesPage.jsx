@@ -17,6 +17,12 @@ const MoviesPage = () => {
       try {
         const query = searchParams.get("query");
         const page = parseInt(searchParams.get("page")) || 1;
+
+        if (!query) {
+          setMovies([]);
+          return;
+        }
+
         const searchData = await getSearchingMovie(query, page);
         if (page === 1) {
           setMovies(searchData);

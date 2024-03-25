@@ -18,8 +18,6 @@ const MovieDetailsPage = () => {
 
   const [currentMovie, setCurrentMovie] = useState(null);
   const { movieId } = useParams();
-  const [showCast, setShowCast] = useState(false);
-  const [showReviews, setShowReviews] = useState(false);
   const location = useLocation();
   const backHref = useRef(location.state || "/movies");
 
@@ -30,19 +28,9 @@ const MovieDetailsPage = () => {
         setCurrentMovie(movieData);
       }
     })();
-  }, []);
+  }, [movieId]);
 
   if (!currentMovie) return <Loader />;
-
-  const toggleCast = () => {
-    setShowCast(!showCast);
-    setShowReviews(false);
-  };
-
-  const toggleReviews = () => {
-    setShowReviews(!showReviews);
-    setShowCast(false);
-  };
 
   return (
     <div>
@@ -78,18 +66,26 @@ const MovieDetailsPage = () => {
         <p>Release Date: {currentMovie.release_date}</p>
         <p>Overview: {currentMovie.overview}</p>
       </div>
-      <div>
-        <NavLink onClick={toggleCast}>
-          <h3 style={{ cursor: "pointer" }}>Cast</h3>
-          {showCast && <MovieCast style={{ cursor: "pointer" }} />}
-        </NavLink>
 
-        <NavLink onClick={toggleReviews}>
-          <h3 style={{ cursor: "pointer" }}>Reviews</h3>
-          {showReviews && <MovieReviews movieId={currentMovie.id} />}
-        </NavLink>
-      </div>
       <Outlet />
+
+      <NavLink to={`/movies/${movieId}/cast`}>
+        <h3 style={{ cursor: "pointer" }}>Cast</h3>
+        {currentMovie.id === movieId && (
+          <div>
+            <MovieCast style={{ cursor: "pointer" }} />
+          </div>
+        )}
+      </NavLink>
+
+      <NavLink to={`/movies/${movieId}/reviews`}>
+        <h3 style={{ cursor: "pointer" }}>Reviews</h3>
+        {currentMovie.id === movieId && (
+          <div>
+            <MovieReviews style={{ cursor: "pointer" }} />
+          </div>
+        )}
+      </NavLink>
     </div>
   );
 };
