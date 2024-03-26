@@ -37,13 +37,9 @@ const MoviesPage = () => {
     fetchMovies();
   }, [searchParams, currentPage]);
 
-  const handleSearch = async (query) => {
+  const handleSearch = async (query, currentPage) => {
     try {
-      const nextPage = 1;
-      const searchData = await getSearchingMovie(query, nextPage);
-      setMovies(searchData);
-      setSearchParams({ query, page: nextPage.toString() });
-      setCurrentPage(nextPage);
+      setSearchParams({ query, page: currentPage });
     } catch (error) {
       console.error("Error searching movies:", error);
     }
