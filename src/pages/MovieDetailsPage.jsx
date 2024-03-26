@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import MovieCast from "../components/movieCast/MovieCast";
-import MovieReviews from "../components/movieReviews/MovieReviews";
 import {
   Link,
   NavLink,
