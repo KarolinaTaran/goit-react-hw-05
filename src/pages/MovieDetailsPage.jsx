@@ -71,20 +71,10 @@ const MovieDetailsPage = () => {
 
       <NavLink to={`/movies/${movieId}/cast`}>
         <h3 style={{ cursor: "pointer" }}>Cast</h3>
-        {currentMovie.id === movieId && (
-          <div>
-            <MovieCast style={{ cursor: "pointer" }} />
-          </div>
-        )}
       </NavLink>
 
       <NavLink to={`/movies/${movieId}/reviews`}>
         <h3 style={{ cursor: "pointer" }}>Reviews</h3>
-        {currentMovie.id === movieId && (
-          <div>
-            <MovieReviews style={{ cursor: "pointer" }} />
-          </div>
-        )}
       </NavLink>
     </div>
   );

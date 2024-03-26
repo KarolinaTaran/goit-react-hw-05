@@ -8,8 +8,7 @@ import LoadMoreBtn from "../components/loadMoreBtn/LoadMoreBtn";
 const MoviesPage = () => {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchParams, setSearchParams] = useSearchParams("query");
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams({ query: "" });
   const location = useLocation();
 
   useEffect(() => {
@@ -36,18 +35,15 @@ const MoviesPage = () => {
     };
 
     fetchMovies();
-  }, [searchParams]);
+  }, [searchParams, currentPage]);
 
   const handleSearch = async (query) => {
     try {
       const nextPage = 1;
       const searchData = await getSearchingMovie(query, nextPage);
       setMovies(searchData);
-      setSearchParams({ query, page: nextPage });
-      navigate(`/movies?query=${query}&page=${nextPage}`, {
-        state: location.state,
-      });
-      setCurrentPage(nextPage + 1);
+      setSearchParams({ query, page: nextPage.toString() });
+      setCurrentPage(nextPage);
     } catch (error) {
       console.error("Error searching movies:", error);
     }
